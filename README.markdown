@@ -1,18 +1,15 @@
-Power Control Plugin for LockInfo
-==============
+# Power Control Plugin for LockInfo
 
 Switch WiFi, Bluetooth, Tethering, Location, Airplane Mode, Brightness (not implemented) from LockInfo.
 
-Build
---------------
+### Build
 
 Besides LockInfo SDK, theos framework and headers from [waynezhang/iphoneheaders](https://waynezhang@github.com/waynezhang/iphoneheaders.git) are needed.
 
+### LICENSE
 
-LICENSE
---------------
 This package is released under GNU GPL v2 License.
 
-CREDIT
---------------
+### CREDIT
+
 Header icon from [pixelpressicons](www.pixelpressicons.com)
