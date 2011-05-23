@@ -1,0 +1,25 @@
+<plist>
+  <dict>
+    <key>items</key>
+    <array>
+      <dict>
+        <key>cell</key>
+        <string>PSGroupCell</string>
+      </dict>
+      <dict>
+        <key>cell</key>
+        <string>PSSwitchCell</string>
+        <key>default</key>
+        <false/>
+        <key>defaults</key>
+        <string>org.unixlife.ios.cydia.lockinfo.PowerControlPlugin</string>
+        <key>key</key>
+        <string>Collapsed</string>
+        <key>label</key>
+        <string>Collapsed By Default</string>
+      </dict>
+    </array>
+    <key>title</key>
+    <string>Power Control</string>
+  </dict>
+</plist>
