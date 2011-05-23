@@ -12,3 +12,7 @@ Besides LockInfo SDK, theos framework and headers from [waynezhang/iphoneheaders
 LICENSE
 --------------
 This package is released under GNU GPL v2 License.
+
+CREDIT
+--------------
+Header icon from [pixelpressicons](www.pixelpressicons.com)
