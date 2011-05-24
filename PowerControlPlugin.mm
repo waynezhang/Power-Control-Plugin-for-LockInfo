@@ -3,8 +3,7 @@
 #import <UIKit/UIApplication.h>
 #import <CoreLocation/CoreLocation.h>
 #import <CoreLocation/CLLocationManager2.h>
-#import <SpringBoard/SBWifiManager.h>
-#import <SpringBoard/SBTelephonyManager.h>
+#import <SpringBoard/SpringBoard.h>
 #import <BluetoothManager/BluetoothManager.h>
 #import <objc/runtime.h>
 #include "Plugin.h"
@@ -25,6 +24,7 @@
   SBTelephonyManager *telephonyManager;
   BluetoothManager *bluetoothManager;
   SBWiFiManager *wiFiManager;
+  SBOrientationLockManager *orientationLockManager;
   LIStyle *disabledStyle;
   LIStyle *enabledStyle;
 }
@@ -35,7 +35,7 @@
 @property (nonatomic, retain) LILabel *tetheringLabel;
 @property (nonatomic, retain) LILabel *bluetoothLabel;
 @property (nonatomic, retain) LILabel *airplaneModeLabel;
-@property (nonatomic, retain) LILabel *brightnessLabel;
+@property (nonatomic, retain) LILabel *orientationLockLabel;
 
 // wifi
 - (void)flipWifi;
@@ -57,9 +57,9 @@
 - (void)flipTethering;
 - (BOOL)tetheringEnabled;
 
-// brightness
-- (void)flipBrightness;
-- (BOOL)brightnessEnabled;
+// orientation lock
+- (void)flipOrientationLock;
+- (BOOL)orientationLocked;
 
 // ui update
 - (void)update;
@@ -68,7 +68,7 @@
 
 @implementation PowerControlPlugin
 
-@synthesize plugin, wifiLabel, locationLabel, tetheringLabel, bluetoothLabel, airplaneModeLabel, brightnessLabel;
+@synthesize plugin, wifiLabel, locationLabel, tetheringLabel, bluetoothLabel, airplaneModeLabel, orientationLockLabel;
 
 - (id)initWithPlugin:(LIPlugin*)thePlugin
 {
@@ -94,6 +94,9 @@
   // wifi
   wiFiManager = [objc_getClass("SBWiFiManager") sharedInstance];
 
+  // orientation lock
+  orientationLockManager = [objc_getClass("SBOrientationLockManager") sharedInstance];
+
   // style
   disabledStyle = nil;
   enabledStyle = nil;
@@ -115,7 +118,7 @@
   self.tetheringLabel = nil;
   self.bluetoothLabel = nil;
   self.airplaneModeLabel = nil;
-  self.brightnessLabel = nil;
+  self.orientationLockLabel = nil;
 
   [disabledStyle release];
   [enabledStyle release];
@@ -190,8 +193,8 @@
     [cell.contentView addSubview:self.airplaneModeLabel];
     x += width;
 
-    self.brightnessLabel = [self labelWithFrame:CGRectMake(x, y, width, height) tableView:tableView action:@selector(flipBrightness)];
-    [cell.contentView addSubview:self.brightnessLabel];
+    self.orientationLockLabel = [self labelWithFrame:CGRectMake(x, y, width, height) tableView:tableView action:@selector(flipOrientationLock)];
+    [cell.contentView addSubview:self.orientationLockLabel];
     x += width;
   }
 
@@ -267,16 +270,17 @@
   return [[wirelessModemController internetTethering:nil] boolValue];
 }
 
-// brightness
-- (void)flipBrightness
+// orientationLock
+- (void)flipOrientationLock
 {
-  // TODO
+  [self orientationLocked] ? [orientationLockManager unlock] : [orientationLockManager lock];
+
+  [self update];
 }
 
-- (BOOL)brightnessEnabled
+- (BOOL)orientationLocked
 {
-  // TODO
-  return YES;
+  return [orientationLockManager isLocked];
 }
 
 // update view
@@ -286,7 +290,7 @@
     return;
   }
 
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 
   self.wifiLabel.text = [@"WiFi\n" stringByAppendingString:[self wiFiEnabled] ? @"On" : @"Off"];
   self.wifiLabel.style = [self wiFiEnabled] ? enabledStyle : disabledStyle;
@@ -303,10 +307,10 @@
   self.airplaneModeLabel.text = [@"Airplane Mode\n" stringByAppendingString:[self airplaneModeEnabled] ? @"On" : @"Off"];
   self.airplaneModeLabel.style = [self airplaneModeEnabled] ? enabledStyle : disabledStyle;
   
-  self.brightnessLabel.text = @"Brightness\n ";
-  self.brightnessLabel.style = disabledStyle;
+  self.orientationLockLabel.text = [@"Orientation\n" stringByAppendingString:[self orientationLocked] ? @"Locked" : @"Unlocked"];
+  self.orientationLockLabel.style = [self orientationLocked] ? enabledStyle : disabledStyle;
 
-	[pool release];
+  [pool release];
 }
 
 @end
